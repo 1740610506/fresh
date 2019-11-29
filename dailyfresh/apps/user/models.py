@@ -13,7 +13,7 @@ class User(AbstractUser, BaseModel):
         verbose_name_plural = verbose_name
 
 
-"""class AddressManager(models.Manager):
+class AddressManager(models.Manager):
     '''地址模型管理器类'''
     # 1.改变原有查询的结果集:all()
     # 2.封装方法:用户操作模型类对应的数据表(增删改查)
@@ -26,7 +26,7 @@ class User(AbstractUser, BaseModel):
             # 不存在默认收货地址
             address = None
 
-            return address"""
+        return address
 
 
 class Address(BaseModel):
@@ -39,7 +39,7 @@ class Address(BaseModel):
     is_default = models.BooleanField(default=False, verbose_name='是否默认')
 
     # 自定义一个模型管理器对象
-    #objects = AddressManager()
+    objects = AddressManager()
 
     class Meta:
         db_table = 'df_address'

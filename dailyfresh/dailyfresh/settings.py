@@ -148,3 +148,24 @@ EMAIL_HOST_PASSWORD = 'zftajozuecikefee'
 # 收件人看到的发件人
 EMAIL_USE_TLS = True
 EMAIL_FROM = '<1685129773@qq.com>'
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://192.168.9.130:6379/9",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# 配置session存储
+SESSION_ENGINE = "django.contrib.sessions.backends.cache"
+SESSION_CACHE_ALIAS = "default"
+
+# 配置登录url地址
+LOGIN_URL='/user/login' # /accounts/login?next=/user
+
+DEFAULT_FILE_STORAGE='utils.fdfs.storage.FDFSStorage'
+FDFS_CLIENT_CONF='./utils/fdfs/client.conf'
+FDFS_URL='http://192.168.9.130:8888/'

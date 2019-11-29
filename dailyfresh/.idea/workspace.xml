@@ -21,15 +21,15 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="D:\work\dailyfresh\templates" />
-      <recent name="D:\work\dailyfresh\apps\user" />
-      <recent name="D:\work\dailyfresh" />
-      <recent name="D:\work\dailyfresh\apps\cart" />
-      <recent name="D:\work\dailyfresh\apps\goods" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="D:\work\dailyfresh\apps" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\work\dailyfresh\templates" />
+      <recent name="D:\work\dailyfresh\static\images" />
+      <recent name="D:\work\dailyfresh" />
+      <recent name="D:\work\dailyfresh\apps\user" />
+      <recent name="D:\work\dailyfresh\apps\cart" />
     </key>
   </component>
   <component name="RunDashboard">

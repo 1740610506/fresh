@@ -1,21 +1,21 @@
 from django.shortcuts import render,redirect
 from django.urls import reverse
 from django.core.mail import send_mail
-#from django.contrib.auth import authenticate, login, logout
-#from django.core.paginator import Paginator
+from django.contrib.auth import authenticate, login, logout
+from django.core.paginator import Paginator
 from django.views.generic import View
 from django.http import HttpResponse,JsonResponse
 from django.conf import settings
 
 from user.models import User, Address
-#from goods.models import GoodsSKU
-#from order.models import OrderInfo,OrderGoods
+from goods.models import GoodsSKU
+from order.models import OrderInfo,OrderGoods
 
-#from celery_tasks.tasks import send_register_active_email
+from celery_tasks.tasks import send_register_active_email
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 from itsdangerous import SignatureExpired
-#from utils.mixin import LoginRequiredMixin
-#from django_redis import get_redis_connection
+from utils.mixin import LoginRequiredMixin
+from django_redis import get_redis_connection
 import re
 import time
 # Create your views here.
@@ -162,13 +162,13 @@ class RegisterView(View):
         token = token.decode()
 
         # 发邮件
-        subject='特长专卖欢迎信息'
-        message=''
-        html_message='<h1>%s, 欢迎您成为天天生鲜注册会员</h1>请点击下面链接激活您的账户<br/><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>' % (username, token, token)
-        sender=settings.EMAIL_FROM
-        receiver=[email]
-        send_mail(subject,message,sender,receiver,html_message=html_message)
-        #send_register_active_email.delay(email, username, token)
+        #subject='特长专卖欢迎信息'
+        #message=''
+        #html_message='<h1>%s, 欢迎您成为天天生鲜注册会员</h1>请点击下面链接激活您的账户<br/><a href="http://127.0.0.1:8000/user/active/%s">http://127.0.0.1:8000/user/active/%s</a>' % (username, token, token)
+        #sender=settings.EMAIL_FROM
+        #receiver=[email]
+        #send_mail(subject,message,sender,receiver,html_message=html_message)
+        send_register_active_email.delay(email, username, token)
 
         # 返回应答, 跳转到首页
         return redirect(reverse('goods:index'))
@@ -199,10 +199,8 @@ class ActiveView(View):
 
 # /user/login
 class LoginView(View):
-    def get(self,request):
-        return render(request,'login.html')
     '''登录'''
-    """def get(self, request):
+    def get(self, request):
         '''显示登录页面'''
         # 判断是否记住了用户名
         if 'username' in request.COOKIES:
@@ -257,11 +255,11 @@ class LoginView(View):
                 return render(request, 'login.html', {'errmsg':'账户未激活'})
         else:
             # 用户名或密码错误
-            return render(request, 'login.html', {'errmsg':'用户名或密码错误'})"""
+            return render(request, 'login.html', {'errmsg':'用户名或密码错误'})
 
 
 # /user/logout
-"""class LogoutView(View):
+class LogoutView(View):
     '''退出登录'''
     def get(self, request):
         '''退出登录'''
@@ -269,11 +267,11 @@ class LoginView(View):
         logout(request)
 
         # 跳转到首页
-        return redirect(reverse('goods:index'))"""
+        return redirect(reverse('goods:index'))
 
 
 # /user
-"""class UserInfoView(LoginRequiredMixin, View):
+class UserInfoView(LoginRequiredMixin, View):
     '''用户中心-信息页'''
     def get(self, request):
         '''显示'''
@@ -317,16 +315,16 @@ class LoginView(View):
                    'goods_li':goods_li}
 
         # 除了你给模板文件传递的模板变量之外，django框架会把request.user也传给模板文件
-        return render(request, 'user_center_info.html', context)"""
+        return render(request, 'user_center_info.html', context)
 
 
 # /user/order
-"""class UserOrderView(LoginRequiredMixin, View):
+class UserOrderView(LoginRequiredMixin,View):
     '''用户中心-订单页'''
     def get(self, request, page):
         '''显示'''
         # 获取用户的订单信息
-        user = request.user
+        """user = request.user
         orders = OrderInfo.objects.filter(user=user).order_by('-create_time')
 
         # 遍历获取订单商品的信息
@@ -383,10 +381,11 @@ class LoginView(View):
 
         # 使用模板
         return render(request, 'user_center_order.html', context)"""
+        return render(request,'user_center_order.html',{'page':'order'})
 
 
 # /user/address
-"""class AddressView(LoginRequiredMixin, View):
+class AddressView(LoginRequiredMixin, View):
     '''用户中心-地址页'''
     def get(self, request):
         '''显示'''
@@ -394,12 +393,12 @@ class LoginView(View):
         user = request.user
 
         # 获取用户的默认收货地址
-        try:
-            address = Address.objects.get(user=user, is_default=True) # models.Manager
-        except Address.DoesNotExist:
+        #
+         #   address = Address.objects.get(user=user, is_default=True) # models.Manager
+        #except Address.DoesNotExist:
             # 不存在默认收货地址
-            address = None
-        # address = Address.objects.get_default_address(user)
+         #   address = None
+        address = Address.objects.get_default_address(user)
 
         # 使用模板
         return render(request, 'user_center_site.html', {'page':'address', 'address':address})
@@ -447,7 +446,8 @@ class LoginView(View):
                                is_default=is_default)
 
         # 返回应答,刷新地址页面
-        return redirect(reverse('user:address')) # get请求方式"""
+        return redirect(reverse('user:address')) # get请求方式
+
 
 
 
